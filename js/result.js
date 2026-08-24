@@ -391,13 +391,13 @@ async function generateShareImage(result) {
   ctx.closePath();
   ctx.fill();
 
-  // 測驗標題（置頂，填滿上方）
+  // 測驗標題（9:16 置中，上方留白 96）
   ctx.textAlign = 'center';
   ctx.fillStyle = result.color;
   ctx.font = '900 56px "Noto Sans TC", sans-serif';
-  ctx.fillText('癌症疼痛管理人格測驗', W / 2, 108);
+  ctx.fillText('癌症疼痛管理人格測驗', W / 2, 148);
 
-  // character（放大，填滿中段）
+  // character（垂直置中段，放大填滿 9:16）
   let charDrawH = 0;
   let charBottom = 0;
   try {
@@ -407,15 +407,15 @@ async function generateShareImage(result) {
     const drawH = 676;
     charDrawH = drawH;
     const cx = W / 2 - drawW / 2;
-    const cy = 148;
+    const cy = 188;
     charBottom = cy + drawH;
     ctx.drawImage(img, cx, cy, drawW, drawH);
   } catch {
-    charBottom = 824;
+    charBottom = 864;
   }
 
-  // title（角色名）— 放大填滿
-  let y = charBottom + 36;
+  // 角色名（與圖片保持 48px 淨空，真正置中）
+  let y = charBottom + 48;
   ctx.textAlign = 'center';
   ctx.fillStyle = result.color;
   ctx.font = '900 62px "Noto Sans TC", sans-serif';
