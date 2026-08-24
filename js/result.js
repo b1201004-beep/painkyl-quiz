@@ -256,7 +256,11 @@ function confetti(mainColor) {
 
 function svgToImage(svgText) {
   return new Promise((resolve, reject) => {
-    const blob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+    let fixed = svgText;
+    if (!fixed.includes('width=')) {
+      fixed = fixed.replace('<svg', '<svg width="200" height="260"');
+    }
+    const blob = new Blob([fixed], { type: 'image/svg+xml;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const img = new Image();
     img.onload = () => {
@@ -386,10 +390,12 @@ async function generateShareImage(result) {
   ctx.font = '500 26px "Noto Sans TC", sans-serif';
   ctx.fillText(`${result.enName}`, W / 2, y);
   y += 38;
+  ctx.textAlign = 'left';
   ctx.fillStyle = '#757575';
   ctx.font = '400 24px "Noto Sans TC", sans-serif';
   const tagY = wrapText(ctx, result.tagline, W / 2 - 380, y, 760, 34);
   y = tagY + 18;
+  ctx.textAlign = 'center';
 
   // traits pills
   const traits = result.traits;
