@@ -500,11 +500,12 @@ async function generateShareImage(result) {
     D: { name: '果斷行動派', enName: 'The Decisive Advocate', color: '#C75B39', character: 'advocate' },
   };
   const buddy = partnerMap[result.code] || partnerMap['A'];
-  // 區塊背景（獨立大區塊，填滿下方留白）
-  const sectionH = 236;
+  // 區塊背景：向下延伸至頁尾上緣，吃掉所有下方留白
   const sectionY = y;
   const sectionX = cardX + 24;
   const sectionW = cardW - 48;
+  const sectionBottom = H - 208;
+  const sectionH = Math.max(260, sectionBottom - sectionY);
   ctx.fillStyle = '#F0F7F3';
   ctx.strokeStyle = '#D5E8DD';
   ctx.lineWidth = 1.5;
@@ -521,72 +522,71 @@ async function generateShareImage(result) {
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
+  // 區塊標籤
   ctx.textAlign = 'center';
   ctx.fillStyle = '#1B4D3E';
-  ctx.font = '800 26px "Noto Sans TC", sans-serif';
-  ctx.fillText('最合拍的夥伴', W / 2, y + 42);
-  y += 68;
-  const pillH2 = 104;
-  const avatarSize = 84;
-  const pad2 = 20;
-  // 計算寬度
-  ctx.font = '600 20px "Noto Sans TC", sans-serif';
-  const nameW = ctx.measureText(buddy.name).width;
-  ctx.font = '400 14px "Noto Sans TC", sans-serif';
-  const enW = ctx.measureText(buddy.enName).width;
-  const textW = Math.max(nameW, enW);
-  const pillW = 24 + avatarSize + 12 + textW + pad2 * 2;
-  const px = W / 2 - pillW / 2;
-  const py = y;
-  // 背景
-  ctx.fillStyle = '#F5F5F5';
+  ctx.font = '800 28px "Noto Sans TC", sans-serif';
+  ctx.fillText('最合拍的夥伴', W / 2, sectionY + 54);
+  // 內部大卡（白色圓角，幾乎填滿區塊）
+  const innerX = sectionX + 36;
+  const innerW = sectionW - 72;
+  const innerY = sectionY + 88;
+  const innerH = sectionY + sectionH - 40 - innerY;
+  ctx.fillStyle = '#FFFFFF';
+  ctx.strokeStyle = '#E3EFE8';
+  ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(px + 20, py);
-  ctx.lineTo(px + pillW - 20, py);
-  ctx.quadraticCurveTo(px + pillW, py, px + pillW, py + 20);
-  ctx.lineTo(px + pillW, py + pillH2 - 20);
-  ctx.quadraticCurveTo(px + pillW, py + pillH2, px + pillW - 20, py + pillH2);
-  ctx.lineTo(px + 20, py + pillH2);
-  ctx.quadraticCurveTo(px, py + pillH2, px, py + pillH2 - 20);
-  ctx.lineTo(px, py + 20);
-  ctx.quadraticCurveTo(px, py, px + 20, py);
+  ctx.moveTo(innerX + 24, innerY);
+  ctx.lineTo(innerX + innerW - 24, innerY);
+  ctx.quadraticCurveTo(innerX + innerW, innerY, innerX + innerW, innerY + 24);
+  ctx.lineTo(innerX + innerW, innerY + innerH - 24);
+  ctx.quadraticCurveTo(innerX + innerW, innerY + innerH, innerX + innerW - 24, innerY + innerH);
+  ctx.lineTo(innerX + 24, innerY + innerH);
+  ctx.quadraticCurveTo(innerX, innerY + innerH, innerX, innerY + innerH - 24);
+  ctx.lineTo(innerX, innerY + 24);
+  ctx.quadraticCurveTo(innerX, innerY, innerX + 24, innerY);
   ctx.closePath();
   ctx.fill();
+  ctx.stroke();
+  // 內容：頭像＋名稱 置中群組，字級匹配大卡
+  const avatarSize = 128;
+  ctx.font = '800 38px "Noto Sans TC", sans-serif';
+  const nameW = ctx.measureText(buddy.name).width;
+  ctx.font = '500 19px "Noto Sans TC", sans-serif';
+  const enW = ctx.measureText(buddy.enName).width;
+  const textW = Math.max(nameW, enW);
+  const groupW = avatarSize + 30 + textW;
+  const gx = W / 2 - groupW / 2;
+  const gy = innerY + innerH / 2;
   // 頭像底圓
-  const ax = px + 16 + avatarSize / 2;
-  const ay = py + pillH2 / 2;
-  ctx.fillStyle = '#FFFFFF';
+  ctx.fillStyle = '#F0F7F3';
   ctx.beginPath();
-  ctx.arc(ax, ay, avatarSize / 2 + 4, 0, Math.PI * 2);
+  ctx.arc(gx + avatarSize / 2, gy, avatarSize / 2 + 6, 0, Math.PI * 2);
   ctx.fill();
-  // 頭像圖片（圓形裁切）
+  // 頭像圖片（圓形裁切，取上半身避免壓扁）
   ctx.save();
   ctx.beginPath();
-  ctx.arc(ax, ay, avatarSize / 2, 0, Math.PI * 2);
+  ctx.arc(gx + avatarSize / 2, gy, avatarSize / 2, 0, Math.PI * 2);
   ctx.clip();
   try {
     const svgText2 = characters[buddy.character];
     const img2 = await svgToImage(svgText2);
-    // SVG 是 200x260，頭像 48x48，取中間區域
-    ctx.drawImage(img2, px + 16, py + 8, avatarSize, avatarSize);
+    ctx.drawImage(img2, 0, 30, 200, 200, gx, gy - avatarSize / 2, avatarSize, avatarSize);
   } catch {}
   ctx.restore();
-  // 夥伴色彩小點（外框）
   ctx.strokeStyle = buddy.color;
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.arc(ax, ay, avatarSize / 2 + 4, 0, Math.PI * 2);
+  ctx.arc(gx + avatarSize / 2, gy, avatarSize / 2 + 6, 0, Math.PI * 2);
   ctx.stroke();
-  // 文字（放大，與大底塊匹配）
+  // 名稱（放大）
   ctx.textAlign = 'left';
   ctx.fillStyle = '#1A1A1A';
-  ctx.font = '800 26px "Noto Sans TC", sans-serif';
-  ctx.fillText(buddy.name, px + 16 + avatarSize + 14, py + 32);
-  ctx.fillStyle = '#616161';
-  ctx.font = '500 16px "Noto Sans TC", sans-serif';
-  ctx.fillText(buddy.enName, px + 16 + avatarSize + 14, py + 52);
-  ctx.textAlign = 'center';
-  y = sectionY + sectionH + 28;
+  ctx.font = '800 38px "Noto Sans TC", sans-serif';
+  ctx.fillText(buddy.name, gx + avatarSize + 30, gy - 6);
+  ctx.fillStyle = '#757575';
+  ctx.font = '500 19px "Noto Sans TC", sans-serif';
+  ctx.fillText(buddy.enName, gx + avatarSize + 30, gy + 30);
 
   // 頁尾一句話 A
   ctx.fillStyle = 'rgba(158,158,158,0.95)';
