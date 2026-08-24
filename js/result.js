@@ -500,11 +500,11 @@ async function generateShareImage(result) {
     D: { name: '果斷行動派', enName: 'The Decisive Advocate', color: '#C75B39', character: 'advocate' },
   };
   const buddy = partnerMap[result.code] || partnerMap['A'];
-  // 區塊背景
-  const sectionH = 196;
+  // 區塊背景（獨立大區塊，填滿下方留白）
+  const sectionH = 236;
   const sectionY = y;
-  const sectionX = cardX + 32;
-  const sectionW = cardW - 64;
+  const sectionX = cardX + 24;
+  const sectionW = cardW - 48;
   ctx.fillStyle = '#F0F7F3';
   ctx.strokeStyle = '#D5E8DD';
   ctx.lineWidth = 1.5;
@@ -522,12 +522,12 @@ async function generateShareImage(result) {
   ctx.fill();
   ctx.stroke();
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#2D6A4F';
-  ctx.font = '700 26px "Noto Sans TC", sans-serif';
-  ctx.fillText('最合拍的夥伴', W / 2, y + 38);
-  y += 62;
-  const pillH2 = 96;
-  const avatarSize = 80;
+  ctx.fillStyle = '#1B4D3E';
+  ctx.font = '800 26px "Noto Sans TC", sans-serif';
+  ctx.fillText('最合拍的夥伴', W / 2, y + 42);
+  y += 68;
+  const pillH2 = 104;
+  const avatarSize = 84;
   const pad2 = 20;
   // 計算寬度
   ctx.font = '600 20px "Noto Sans TC", sans-serif';
@@ -577,14 +577,14 @@ async function generateShareImage(result) {
   ctx.beginPath();
   ctx.arc(ax, ay, avatarSize / 2 + 4, 0, Math.PI * 2);
   ctx.stroke();
-  // 文字
+  // 文字（放大，與大底塊匹配）
   ctx.textAlign = 'left';
-  ctx.fillStyle = '#424242';
-  ctx.font = '600 20px "Noto Sans TC", sans-serif';
-  ctx.fillText(buddy.name, px + 16 + avatarSize + 12, py + 26);
-  ctx.fillStyle = '#757575';
-  ctx.font = '400 13px "Noto Sans TC", sans-serif';
-  ctx.fillText(buddy.enName, px + 16 + avatarSize + 12, py + 44);
+  ctx.fillStyle = '#1A1A1A';
+  ctx.font = '800 26px "Noto Sans TC", sans-serif';
+  ctx.fillText(buddy.name, px + 16 + avatarSize + 14, py + 32);
+  ctx.fillStyle = '#616161';
+  ctx.font = '500 16px "Noto Sans TC", sans-serif';
+  ctx.fillText(buddy.enName, px + 16 + avatarSize + 14, py + 52);
   ctx.textAlign = 'center';
   y = sectionY + sectionH + 28;
 
