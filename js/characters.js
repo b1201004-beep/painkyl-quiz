@@ -16,7 +16,7 @@ const assessor = svgWrap(`
   <rect x="50" y="64" width="6" height="10" rx="3" fill="#BFDCCF"/>
   <path d="M164 54 h4 v-4 h8 v4 h4 v8 h-4 v4 h-8 v-4 h-4 Z" fill="#9CCDB6"/>
   <circle cx="160" cy="182" r="13" fill="none" stroke="#BFDCCF" stroke-width="2.5" stroke-dasharray="4 5"/>
-  <ellipse cx="100" cy="248" rx="48" ry="7" fill="rgba(45,106,79,0.10)"/>
+  <ellipse cx="100" cy="242" rx="42" ry="6" fill="rgba(45,106,79,0.07)"/>
   <circle cx="100" cy="44" r="13" fill="#4A3728"/>
   <rect x="93" y="98" width="14" height="12" fill="${SKIN}"/>
   <path d="M73 116 Q100 105 127 116 L133 198 Q100 205 67 198 Z" fill="#FFFFFF" stroke="#DCE7E1" stroke-width="2"/>
@@ -68,7 +68,7 @@ const advocate = svgWrap(`
   <circle cx="162" cy="58" r="12" fill="#FFFFFF" stroke="#C75B39" stroke-width="3"/>
   <rect x="159" y="42" width="6" height="6" rx="2" fill="#C75B39"/>
   <path d="M162 58 L162 51 M162 58 L167 61" stroke="#C75B39" stroke-width="2" stroke-linecap="round"/>
-  <ellipse cx="100" cy="248" rx="50" ry="7" fill="rgba(199,91,57,0.12)"/>
+  <ellipse cx="100" cy="242" rx="44" ry="6" fill="rgba(199,91,57,0.08)"/>
   <rect x="93" y="99" width="14" height="11" fill="${SKIN2}"/>
   <path d="M72 116 Q100 106 128 116 L132 192 Q100 199 68 192 Z" fill="#C75B39" stroke="#B04E31" stroke-width="2"/>
   <path d="M88 113 L100 131 L112 113 Z" fill="#F6EFE9"/>
@@ -98,7 +98,7 @@ const companion = svgWrap(`
   ${heart(163, 92, 5, '#E8A7C5')}
   ${heart(156, 168, 6, '#F0BCD3')}
   <path d="M30 176 h8 M34 172 v8" stroke="#E8A7C5" stroke-width="2" stroke-linecap="round"/>
-  <ellipse cx="100" cy="248" rx="48" ry="7" fill="rgba(176,87,141,0.10)"/>
+  <ellipse cx="100" cy="242" rx="42" ry="6" fill="rgba(176,87,141,0.07)"/>
   <path d="M72 76 C72 44 128 44 128 76 L130 114 Q100 126 70 114 Z" fill="#6B4A3A"/>
   <rect x="93" y="98" width="14" height="11" fill="${SKIN}"/>
   <path d="M71 118 Q100 107 129 118 L136 178 Q100 189 64 178 Z" fill="#F7D9E7" stroke="#EBC2D6" stroke-width="2"/>
@@ -137,7 +137,7 @@ const integrator = svgWrap(`
   <circle cx="24" cy="122" r="6" fill="#4A6FA5"/><circle cx="24" cy="122" r="2" fill="#FFFFFF"/>
   <circle cx="176" cy="122" r="6" fill="#4A6FA5"/><circle cx="176" cy="122" r="2" fill="#FFFFFF"/>
   <circle cx="100" cy="36" r="6" fill="#4A6FA5"/><circle cx="100" cy="36" r="2" fill="#FFFFFF"/>
-  <ellipse cx="100" cy="248" rx="48" ry="7" fill="rgba(74,111,165,0.10)"/>
+  <ellipse cx="100" cy="242" rx="42" ry="6" fill="rgba(74,111,165,0.07)"/>
   <rect x="93" y="98" width="14" height="11" fill="${SKIN2}"/>
   <path d="M76 114 Q100 106 124 114 L127 196 Q100 202 73 196 Z" fill="#FFFFFF" stroke="#D9E2EC" stroke-width="2"/>
   <path d="M76 114 C68 122 66 152 70 196 L85 196 L87 130 Z" fill="#4A6FA5" stroke="#3D5E8C" stroke-width="2"/>
