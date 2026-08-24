@@ -293,6 +293,28 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   return curY + lineHeight;
 }
 
+function wrapTextCentered(ctx, text, centerX, y, maxWidth, lineHeight) {
+  const chars = text.split('');
+  let line = '';
+  const lines = [];
+  for (let i = 0; i < chars.length; i++) {
+    const test = line + chars[i];
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = chars[i];
+    } else {
+      line = test;
+    }
+  }
+  if (line) lines.push(line);
+  let curY = y;
+  lines.forEach(l => {
+    ctx.fillText(l, centerX, curY);
+    curY += lineHeight;
+  });
+  return curY;
+}
+
 async function generateShareImage(result) {
   const canvas = document.getElementById('shareCanvas');
   const W = 1080;
@@ -368,6 +390,12 @@ async function generateShareImage(result) {
   ctx.closePath();
   ctx.fill();
 
+  // 測驗標題（置頂小字）
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#5A7D6F';
+  ctx.font = '600 22px "Noto Sans TC", sans-serif';
+  ctx.fillText('癌症疼痛管理人格測驗', W / 2, 96);
+
   // character
   try {
     const svgText = characters[result.character];
@@ -375,7 +403,7 @@ async function generateShareImage(result) {
     const drawW = 420;
     const drawH = 546;
     const cx = W / 2 - drawW / 2;
-    const cy = 112;
+    const cy = 122;
     ctx.drawImage(img, cx, cy, drawW, drawH);
   } catch {}
 
@@ -390,10 +418,10 @@ async function generateShareImage(result) {
   ctx.font = '500 26px "Noto Sans TC", sans-serif';
   ctx.fillText(`${result.enName}`, W / 2, y);
   y += 38;
-  ctx.textAlign = 'left';
+  ctx.textAlign = 'center';
   ctx.fillStyle = '#757575';
   ctx.font = '400 24px "Noto Sans TC", sans-serif';
-  const tagY = wrapText(ctx, result.tagline, W / 2 - 380, y, 760, 34);
+  const tagY = wrapTextCentered(ctx, result.tagline, W / 2, y, 760, 34);
   y = tagY + 18;
   ctx.textAlign = 'center';
 
@@ -430,7 +458,40 @@ async function generateShareImage(result) {
     startX += pw + gap;
   });
   ctx.textAlign = 'center';
-  y += pillH + 48;
+  y += pillH + 28;
+
+  // 小知識卡 B
+  const knowY = y;
+  const knowH = 72;
+  const knowX = cardX + 48;
+  const knowW = cardW - 96;
+  ctx.fillStyle = 'rgba(232,245,238,0.92)';
+  ctx.beginPath();
+  ctx.moveTo(knowX + 16, knowY);
+  ctx.lineTo(knowX + knowW - 16, knowY);
+  ctx.quadraticCurveTo(knowX + knowW, knowY, knowX + knowW, knowY + 16);
+  ctx.lineTo(knowX + knowW, knowY + knowH - 16);
+  ctx.quadraticCurveTo(knowX + knowW, knowY + knowH, knowX + knowW - 16, knowY + knowH);
+  ctx.lineTo(knowX + 16, knowY + knowH);
+  ctx.quadraticCurveTo(knowX, knowY + knowH, knowX, knowY + knowH - 16);
+  ctx.lineTo(knowX, knowY + 16);
+  ctx.quadraticCurveTo(knowX, knowY, knowX + 16, knowY);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = '#2D6A4F';
+  ctx.font = '600 18px "Noto Sans TC", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('小知識', W / 2, knowY + 28);
+  ctx.fillStyle = '#616161';
+  ctx.font = '400 18px "Noto Sans TC", sans-serif';
+  ctx.fillText('66% 晚期癌症患者持續受疼痛困擾，早期評估很重要', W / 2, knowY + 52);
+  y = knowY + knowH + 24;
+
+  // 頁尾一句話 A
+  ctx.fillStyle = 'rgba(158,158,158,0.95)';
+  ctx.font = '400 16px "Noto Sans TC", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('疼痛控制是治療的起點 — 認識 Painkyl', W / 2, H - 138);
 
   // footer
   ctx.fillStyle = '#9E9E9E';
