@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>測驗結果 | Painkyl 醫護人格測驗</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body data-page="result">
+  <main class="page result-page">
+    <div class="page-container">
+      <header class="page-header">
+        <div class="brand-badge">
+          <span class="badge-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </span>
+          <span>測驗結果</span>
+        </div>
+      </header>
+
+      <div class="result-content">
+        <section class="result-card">
+          <div class="result-character" id="resultCharacter"></div>
+          <h1 class="result-title" id="resultTitle"></h1>
+          <p class="result-tagline" id="resultTagline"></p>
+          <div class="result-traits" id="resultTraits"></div>
+        </section>
+
+        <section class="result-section">
+          <h2 class="section-title">您的照護風格分析</h2>
+          <div class="analysis-content" id="analysisContent"></div>
+        </section>
+
+        <section class="result-section">
+          <h2 class="section-title">專屬建議與 Painkyl 應用</h2>
+          <div class="recommendation-content" id="recommendationContent"></div>
+        </section>
+
+        <section class="edu-section" id="eduSection">
+          <div class="edu-header">
+            <span class="edu-brand-line" id="eduBrandLine"></span>
+            <h2 class="edu-title">認識 Painkyl · 癌症疼痛衛教</h2>
+            <p class="edu-intro" id="eduIntro"></p>
+          </div>
+          <div class="edu-grid" id="eduGrid"></div>
+          <p class="edu-disclaimer" id="eduDisclaimer"></p>
+        </section>
+
+        <div class="result-actions">
+          <button class="btn btn-primary btn-lg" id="shareBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+            <span>分享結果</span>
+          </button>
+          <a class="btn btn-outline btn-lg" href="index.html" id="retakeLink">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <span>重新測驗</span>
+          </a>
+        </div>
+      </div>
+
+        <div class="share-modal" id="shareModal" hidden>
+          <div class="share-backdrop" id="shareBackdrop"></div>
+          <div class="share-sheet" role="dialog" aria-modal="true" aria-label="分享結果">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <h3 class="sheet-title">分享我的照護人格</h3>
+            <p class="share-preview" id="sharePreview"></p>
+            <a class="share-option share-line" id="shareLine" href="#" target="_blank" rel="noopener">
+              <span class="so-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.69 2 10.24c0 4.09 3.5 7.51 8.25 8.14.32.07.76.21.87.48.1.25.07.65.03.9l-.14.85c-.04.25-.2.98.86.53s5.7-3.36 7.78-5.74C21.1 13.72 22 12.08 22 10.24C22 5.69 17.52 2 12 2zM8.6 13.02H6.55a.47.47 0 0 1-.47-.47V8.36c0-.26.21-.47.47-.47s.47.21.47.47v3.71H8.6c.26 0 .47.21.47.47s-.21.48-.47.48zm2.1-.47c0 .26-.21.47-.47.47s-.47-.21-.47-.47V8.36c0-.26.21-.47.47-.47s.47.21.47.47v4.19zm4.84 0c0 .2-.13.38-.32.44a.47.47 0 0 1-.54-.18l-1.94-2.64v2.38c0 .26-.21.47-.47.47s-.47-.21-.47-.47V8.36a.47.47 0 0 1 .86-.26l1.95 2.65V8.36c0-.26.21-.47.47-.47s.46.21.46.47v4.19zm3.25-2.57c.26 0 .47.21.47.47s-.21.47-.47.47h-1.42v.94h1.42c.26 0 .47.21.47.47s-.21.47-.47.47h-1.89a.47.47 0 0 1-.47-.47V8.36c0-.26.21-.47.47-.47h1.89c.26 0 .47.21.47.47s-.21.47-.47.47h-1.42v.94h1.42z"/></svg>
+              </span>
+              分享到 LINE
+            </a>
+            <button class="share-option share-copy" id="shareCopy" type="button">
+              <span class="so-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </span>
+              複製文字與連結
+            </button>
+            <button class="share-option share-native" id="shareNative" type="button">
+              <span class="so-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+              </span>
+              其他分享方式
+            </button>
+            <button class="share-cancel" id="shareCancel" type="button">取消</button>
+          </div>
+        </div>
+
+        <footer class="page-footer">
+        <div class="footer-brand">
+          <svg class="footer-logo" viewBox="0 0 120 120" aria-hidden="true">
+            <defs><linearGradient id="fg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2D6A4F"/><stop offset="100%" stop-color="#40916C"/></linearGradient></defs>
+            <circle cx="60" cy="60" r="50" fill="url(#fg2)" opacity="0.1"/>
+            <path d="M60 25 C45 25 35 35 35 50 C35 65 50 80 60 95 C70 80 85 65 85 50 C85 35 75 25 60 25 Z" fill="none" stroke="url(#fg2)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="60" cy="50" r="6" fill="url(#fg2)"/>
+          </svg>
+          <span>東洋藥品工業股份有限公司</span>
+        </div>
+        <p class="footer-disclaimer">
+          本測驗結果僅供參考，臨床決策請依專業判斷與指引辦理。<br>
+          Painkyl 適應症、劑量與給藥方式請參閱仿單或諮詢醫師藥師。
+        </p>
+      </footer>
+    </div>
+  </main>
+  <script type="module" src="js/result.js"></script>
+</body>
+</html>
