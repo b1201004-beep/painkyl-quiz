@@ -390,11 +390,11 @@ async function generateShareImage(result) {
   ctx.closePath();
   ctx.fill();
 
-  // 測驗標題（下移，避免貼頂，顏色跟隨結果，比角色名大）
+  // 測驗標題（置於角色頭上白色區域正中央）
   ctx.textAlign = 'center';
   ctx.fillStyle = result.color;
   ctx.font = '900 72px "Noto Sans TC", sans-serif';
-  ctx.fillText('癌症疼痛管理人格測驗', W / 2, 164);
+  ctx.fillText('癌症疼痛管理人格測驗', W / 2, 118);
 
   // character（依標題位置自動計算，避免與文字重疊）
   let charDrawH = 0;
@@ -485,15 +485,15 @@ async function generateShareImage(result) {
   ctx.closePath();
   ctx.fill();
   ctx.fillStyle = '#2D6A4F';
-  ctx.font = '600 18px "Noto Sans TC", sans-serif';
+  ctx.font = '700 20px "Noto Sans TC", sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('小知識', W / 2, knowY + 28);
   ctx.fillStyle = '#616161';
-  ctx.font = '400 18px "Noto Sans TC", sans-serif';
+  ctx.font = '500 20px "Noto Sans TC", sans-serif';
   ctx.fillText('66% 晚期癌症患者持續受疼痛困擾，早期評估很重要', W / 2, knowY + 52);
   y = knowY + knowH + 40;
 
-  // 最合拍的夥伴 — 獨立大區塊
+  // 最合拍的夥伴 — 無灰底，置中放大
   const partnerMap = {
     A: { name: '溫暖同行者', enName: 'The Empathetic Companion', color: '#B0578D', character: 'companion' },
     B: { name: '精準評估家', enName: 'The Precision Assessor', color: '#2D6A4F', character: 'assessor' },
@@ -501,32 +501,11 @@ async function generateShareImage(result) {
     D: { name: '果斷行動派', enName: 'The Decisive Advocate', color: '#C75B39', character: 'advocate' },
   };
   const buddy = partnerMap[result.code] || partnerMap['A'];
-  // 區塊背景（獨立區域）
-  const sectionH = 196;
-  const sectionY = y;
-  const sectionX = cardX + 24;
-  const sectionW = cardW - 48;
-  ctx.fillStyle = '#F0F7F3';
-  ctx.strokeStyle = '#D5E8DD';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.moveTo(sectionX + 20, sectionY);
-  ctx.lineTo(sectionX + sectionW - 20, sectionY);
-  ctx.quadraticCurveTo(sectionX + sectionW, sectionY, sectionX + sectionW, sectionY + 20);
-  ctx.lineTo(sectionX + sectionW, sectionY + sectionH - 20);
-  ctx.quadraticCurveTo(sectionX + sectionW, sectionY + sectionH, sectionX + sectionW - 20, sectionY + sectionH);
-  ctx.lineTo(sectionX + 20, sectionY + sectionH);
-  ctx.quadraticCurveTo(sectionX, sectionY + sectionH, sectionX, sectionY + sectionH - 20);
-  ctx.lineTo(sectionX, sectionY + 20);
-  ctx.quadraticCurveTo(sectionX, sectionY, sectionX + 20, sectionY);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
   ctx.textAlign = 'center';
   ctx.fillStyle = '#2D6A4F';
-  ctx.font = '700 22px "Noto Sans TC", sans-serif';
-  ctx.fillText('最合拍的夥伴', W / 2, y + 36);
-  y += 54;
+  ctx.font = '700 24px "Noto Sans TC", sans-serif';
+  ctx.fillText('最合拍的夥伴', W / 2, y + 32);
+  y += 52;
   const pillH2 = 96;
   const avatarSize = 80;
   const pad2 = 20;
@@ -587,7 +566,7 @@ async function generateShareImage(result) {
   ctx.font = '400 13px "Noto Sans TC", sans-serif';
   ctx.fillText(buddy.enName, px + 16 + avatarSize + 12, py + 44);
   ctx.textAlign = 'center';
-  y = sectionY + sectionH + 28;
+  y += pillH2 + 32;
 
   // 頁尾一句話 A
   ctx.fillStyle = 'rgba(158,158,158,0.95)';
