@@ -390,20 +390,20 @@ async function generateShareImage(result) {
   ctx.closePath();
   ctx.fill();
 
-  // 測驗標題（置頂大字，比角色名更大，顏色跟隨結果）
+  // 測驗標題（下移，避免貼頂，顏色跟隨結果）
   ctx.textAlign = 'center';
   ctx.fillStyle = result.color;
   ctx.font = '900 68px "Noto Sans TC", sans-serif';
-  ctx.fillText('癌症疼痛管理人格測驗', W / 2, 132);
+  ctx.fillText('癌症疼痛管理人格測驗', W / 2, 158);
 
-  // character
+  // character（同步下移，避免與標題重疊）
   try {
     const svgText = characters[result.character];
     const img = await svgToImage(svgText);
     const drawW = 420;
     const drawH = 546;
     const cx = W / 2 - drawW / 2;
-    const cy = 132;
+    const cy = 168;
     ctx.drawImage(img, cx, cy, drawW, drawH);
   } catch {}
 
@@ -422,7 +422,7 @@ async function generateShareImage(result) {
   ctx.fillStyle = '#757575';
   ctx.font = '400 24px "Noto Sans TC", sans-serif';
   const tagY = wrapTextCentered(ctx, result.tagline, W / 2, y, 760, 34);
-  y = tagY + 18;
+  y = tagY + 10;
   ctx.textAlign = 'center';
 
   // traits pills
@@ -458,9 +458,9 @@ async function generateShareImage(result) {
     startX += pw + gap;
   });
   ctx.textAlign = 'center';
-  y += pillH + 28;
+  y += pillH + 14;
 
-  // 小知識卡 B
+  // 小知識卡 B（上移）
   const knowY = y;
   const knowH = 72;
   const knowX = cardX + 48;
@@ -485,9 +485,9 @@ async function generateShareImage(result) {
   ctx.fillStyle = '#616161';
   ctx.font = '400 18px "Noto Sans TC", sans-serif';
   ctx.fillText('66% 晚期癌症患者持續受疼痛困擾，早期評估很重要', W / 2, knowY + 52);
-  y = knowY + knowH + 24;
+  y = knowY + knowH + 36;
 
-  // 最合拍的夥伴（單一，含角色圖片，顏色跟隨夥伴）
+  // 最合拍的夥伴（單一，含角色圖片，顏色跟隨夥伴）— 下移 + 放大
   const partnerMap = {
     A: { name: '溫暖同行者', enName: 'The Empathetic Companion', color: '#B0578D', character: 'companion' },
     B: { name: '精準評估家', enName: 'The Precision Assessor', color: '#2D6A4F', character: 'assessor' },
@@ -497,11 +497,11 @@ async function generateShareImage(result) {
   const buddy = partnerMap[result.code] || partnerMap['A'];
   ctx.textAlign = 'center';
   ctx.fillStyle = '#616161';
-  ctx.font = '600 20px "Noto Sans TC", sans-serif';
+  ctx.font = '600 22px "Noto Sans TC", sans-serif';
   ctx.fillText('最合拍的夥伴', W / 2, y);
-  y += 30;
-  const pillH2 = 64;
-  const avatarSize = 48;
+  y += 36;
+  const pillH2 = 80;
+  const avatarSize = 64;
   const pad2 = 20;
   // 計算寬度
   ctx.font = '600 20px "Noto Sans TC", sans-serif';
