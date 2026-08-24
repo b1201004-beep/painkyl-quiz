@@ -608,10 +608,16 @@ body {
   background: var(--color-gray-50);
   border-radius: var(--radius-lg);
   border-left: 4px solid var(--color-primary);
-  margin-bottom: var(--spacing-8);
+  margin-bottom: var(--spacing-3);
   font-size: var(--font-size-lg);
   line-height: 1.8;
   color: var(--color-gray-700);
+}
+
+.question-hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-500);
+  margin: calc(-1 * var(--spacing-2)) var(--spacing-2) var(--spacing-8);
 }
 
 .options-container {
