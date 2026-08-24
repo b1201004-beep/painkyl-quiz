@@ -390,11 +390,11 @@ async function generateShareImage(result) {
   ctx.closePath();
   ctx.fill();
 
-  // 測驗標題（置頂大字，比角色名更大）
+  // 測驗標題（置頂大字，比角色名更大，顏色跟隨結果）
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#1B4D3E';
+  ctx.fillStyle = result.color;
   ctx.font = '900 68px "Noto Sans TC", sans-serif';
-  ctx.fillText('癌症疼痛管理人格測驗', W / 2, 108);
+  ctx.fillText('癌症疼痛管理人格測驗', W / 2, 132);
 
   // character
   try {
@@ -487,54 +487,80 @@ async function generateShareImage(result) {
   ctx.fillText('66% 晚期癌症患者持續受疼痛困擾，早期評估很重要', W / 2, knowY + 52);
   y = knowY + knowH + 24;
 
-  // 最合拍的夥伴
+  // 最合拍的夥伴（單一，含角色圖片，顏色跟隨夥伴）
   const partnerMap = {
-    A: [{ name: '溫暖同行者', color: '#B0578D' }, { name: '全景統籌者', color: '#4A6FA5' }],
-    B: [{ name: '精準評估家', color: '#2D6A4F' }, { name: '全景統籌者', color: '#4A6FA5' }],
-    C: [{ name: '精準評估家', color: '#2D6A4F' }, { name: '果斷行動派', color: '#C75B39' }],
-    D: [{ name: '果斷行動派', color: '#C75B39' }, { name: '溫暖同行者', color: '#B0578D' }],
+    A: { name: '溫暖同行者', enName: 'The Empathetic Companion', color: '#B0578D', character: 'companion' },
+    B: { name: '精準評估家', enName: 'The Precision Assessor', color: '#2D6A4F', character: 'assessor' },
+    C: { name: '全景統籌者', enName: 'The Holistic Integrator', color: '#4A6FA5', character: 'integrator' },
+    D: { name: '果斷行動派', enName: 'The Decisive Advocate', color: '#C75B39', character: 'advocate' },
   };
-  const buddies = partnerMap[result.code] || partnerMap['A'];
+  const buddy = partnerMap[result.code] || partnerMap['A'];
   ctx.textAlign = 'center';
   ctx.fillStyle = '#616161';
   ctx.font = '600 20px "Noto Sans TC", sans-serif';
   ctx.fillText('最合拍的夥伴', W / 2, y);
-  y += 32;
-  ctx.font = '600 20px "Noto Sans TC", sans-serif';
-  const gap2 = 16;
-  const pillH2 = 40;
+  y += 30;
+  const pillH2 = 64;
+  const avatarSize = 48;
   const pad2 = 20;
-  const widths2 = buddies.map(b => ctx.measureText(b.name).width + 28 + pad2 * 2);
-  const totalW2 = widths2.reduce((a, b) => a + b, 0) + gap2;
-  let sx = W / 2 - totalW2 / 2;
-  buddies.forEach((b, i) => {
-    const pw = widths2[i];
-    const px = sx;
-    const py = y;
-    ctx.fillStyle = '#F5F5F5';
-    ctx.beginPath();
-    ctx.moveTo(px + 20, py);
-    ctx.lineTo(px + pw - 20, py);
-    ctx.quadraticCurveTo(px + pw, py, px + pw, py + 20);
-    ctx.lineTo(px + pw, py + pillH2 - 20);
-    ctx.quadraticCurveTo(px + pw, py + pillH2, px + pw - 20, py + pillH2);
-    ctx.lineTo(px + 20, py + pillH2);
-    ctx.quadraticCurveTo(px, py + pillH2, px, py + pillH2 - 20);
-    ctx.lineTo(px, py + 20);
-    ctx.quadraticCurveTo(px, py, px + 20, py);
-    ctx.closePath();
-    ctx.fill();
-    ctx.fillStyle = b.color;
-    ctx.beginPath();
-    ctx.arc(px + 18, py + pillH2 / 2, 8, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#424242';
-    ctx.textAlign = 'left';
-    ctx.fillText(b.name, px + 32, py + 26);
-    sx += pw + gap2;
-  });
+  // 計算寬度
+  ctx.font = '600 20px "Noto Sans TC", sans-serif';
+  const nameW = ctx.measureText(buddy.name).width;
+  ctx.font = '400 14px "Noto Sans TC", sans-serif';
+  const enW = ctx.measureText(buddy.enName).width;
+  const textW = Math.max(nameW, enW);
+  const pillW = 24 + avatarSize + 12 + textW + pad2 * 2;
+  const px = W / 2 - pillW / 2;
+  const py = y;
+  // 背景
+  ctx.fillStyle = '#F5F5F5';
+  ctx.beginPath();
+  ctx.moveTo(px + 20, py);
+  ctx.lineTo(px + pillW - 20, py);
+  ctx.quadraticCurveTo(px + pillW, py, px + pillW, py + 20);
+  ctx.lineTo(px + pillW, py + pillH2 - 20);
+  ctx.quadraticCurveTo(px + pillW, py + pillH2, px + pillW - 20, py + pillH2);
+  ctx.lineTo(px + 20, py + pillH2);
+  ctx.quadraticCurveTo(px, py + pillH2, px, py + pillH2 - 20);
+  ctx.lineTo(px, py + 20);
+  ctx.quadraticCurveTo(px, py, px + 20, py);
+  ctx.closePath();
+  ctx.fill();
+  // 頭像底圓
+  const ax = px + 16 + avatarSize / 2;
+  const ay = py + pillH2 / 2;
+  ctx.fillStyle = '#FFFFFF';
+  ctx.beginPath();
+  ctx.arc(ax, ay, avatarSize / 2 + 4, 0, Math.PI * 2);
+  ctx.fill();
+  // 頭像圖片（圓形裁切）
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(ax, ay, avatarSize / 2, 0, Math.PI * 2);
+  ctx.clip();
+  try {
+    const svgText2 = characters[buddy.character];
+    const img2 = await svgToImage(svgText2);
+    // SVG 是 200x260，頭像 48x48，取中間區域
+    ctx.drawImage(img2, px + 16, py + 8, avatarSize, avatarSize);
+  } catch {}
+  ctx.restore();
+  // 夥伴色彩小點（外框）
+  ctx.strokeStyle = buddy.color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(ax, ay, avatarSize / 2 + 4, 0, Math.PI * 2);
+  ctx.stroke();
+  // 文字
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#424242';
+  ctx.font = '600 20px "Noto Sans TC", sans-serif';
+  ctx.fillText(buddy.name, px + 16 + avatarSize + 12, py + 26);
+  ctx.fillStyle = '#757575';
+  ctx.font = '400 13px "Noto Sans TC", sans-serif';
+  ctx.fillText(buddy.enName, px + 16 + avatarSize + 12, py + 44);
   ctx.textAlign = 'center';
-  y += pillH2 + 24;
+  y += pillH2 + 28;
 
   // 頁尾一句話 A
   ctx.fillStyle = 'rgba(158,158,158,0.95)';
