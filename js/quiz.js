@@ -3,16 +3,8 @@ import { sfxClick } from './immersive.js';
 import { softNavigate } from './router.js';
 
 const KEY = 'painkyl_answers';
+const SET_KEY = 'painkyl_quiz_set';
 const idx = Number(document.body.dataset.question) - 1;
-const q = questions[idx];
-
-const els = {
-  title: document.querySelector('.question-title'),
-  scenario: document.querySelector('.question-scenario'),
-  options: document.querySelector('.options-container'),
-  nextBtn: document.getElementById('nextBtn'),
-  prevBtn: document.getElementById('prevBtn')
-};
 
 function loadAnswers() {
   try {
@@ -21,6 +13,39 @@ function loadAnswers() {
     return [];
   }
 }
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// 每次測驗從題庫隨機抽 3 題；作答中途保持同一組題目
+function ensureSet() {
+  let set = null;
+  try {
+    set = JSON.parse(sessionStorage.getItem(SET_KEY));
+  } catch {}
+  const hasAnswers = loadAnswers().some(Boolean);
+  if (!Array.isArray(set) || set.length !== 3 || (!hasAnswers && idx === 0)) {
+    set = shuffle(questions.map(qq => qq.id)).slice(0, 3);
+    sessionStorage.setItem(SET_KEY, JSON.stringify(set));
+  }
+  return set;
+}
+
+const setId = ensureSet()[idx] ?? questions[idx].id;
+const q = questions.find(x => x.id === setId) || questions[idx];
+
+const els = {
+  title: document.querySelector('.question-title'),
+  scenario: document.querySelector('.question-scenario'),
+  options: document.querySelector('.options-container'),
+  nextBtn: document.getElementById('nextBtn'),
+  prevBtn: document.getElementById('prevBtn')
+};
 
 function saveAnswer(type) {
   const answers = loadAnswers();
@@ -32,6 +57,12 @@ function render() {
   document.title = `第 ${idx + 1} 題 | Painkyl 醫護人格測驗`;
   els.title.textContent = q.title;
   els.scenario.textContent = q.scenario;
+  if (q.hint && !els.scenario.nextElementSibling?.classList.contains('question-hint')) {
+    const hint = document.createElement('p');
+    hint.className = 'question-hint';
+    hint.textContent = q.hint;
+    els.scenario.after(hint);
+  }
 
   q.options.forEach((opt, i) => {
     const wrap = document.createElement('div');
@@ -67,7 +98,7 @@ els.nextBtn.addEventListener('click', () => {
   const selected = loadAnswers()[idx];
   if (!selected) return;
   sfxClick();
-  softNavigate(idx < questions.length - 1 ? `quiz${idx + 2}.html` : 'result.html');
+  softNavigate(idx < 2 ? `quiz${idx + 2}.html` : 'result.html');
 });
 
 render();
