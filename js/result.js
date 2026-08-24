@@ -390,11 +390,11 @@ async function generateShareImage(result) {
   ctx.closePath();
   ctx.fill();
 
-  // 測驗標題（置頂小字）
+  // 測驗標題（置頂大字，比角色名更大）
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#5A7D6F';
-  ctx.font = '600 22px "Noto Sans TC", sans-serif';
-  ctx.fillText('癌症疼痛管理人格測驗', W / 2, 96);
+  ctx.fillStyle = '#1B4D3E';
+  ctx.font = '900 68px "Noto Sans TC", sans-serif';
+  ctx.fillText('癌症疼痛管理人格測驗', W / 2, 108);
 
   // character
   try {
@@ -403,15 +403,15 @@ async function generateShareImage(result) {
     const drawW = 420;
     const drawH = 546;
     const cx = W / 2 - drawW / 2;
-    const cy = 122;
+    const cy = 132;
     ctx.drawImage(img, cx, cy, drawW, drawH);
   } catch {}
 
-  // title
+  // title（角色名，刻意比測驗標題小）
   let y = 700;
   ctx.textAlign = 'center';
   ctx.fillStyle = result.color;
-  ctx.font = '900 64px "Noto Sans TC", sans-serif';
+  ctx.font = '900 52px "Noto Sans TC", sans-serif';
   ctx.fillText(result.name, W / 2, y);
   y += 56;
   ctx.fillStyle = '#616161';
@@ -486,6 +486,55 @@ async function generateShareImage(result) {
   ctx.font = '400 18px "Noto Sans TC", sans-serif';
   ctx.fillText('66% 晚期癌症患者持續受疼痛困擾，早期評估很重要', W / 2, knowY + 52);
   y = knowY + knowH + 24;
+
+  // 最合拍的夥伴
+  const partnerMap = {
+    A: [{ name: '溫暖同行者', color: '#B0578D' }, { name: '全景統籌者', color: '#4A6FA5' }],
+    B: [{ name: '精準評估家', color: '#2D6A4F' }, { name: '全景統籌者', color: '#4A6FA5' }],
+    C: [{ name: '精準評估家', color: '#2D6A4F' }, { name: '果斷行動派', color: '#C75B39' }],
+    D: [{ name: '果斷行動派', color: '#C75B39' }, { name: '溫暖同行者', color: '#B0578D' }],
+  };
+  const buddies = partnerMap[result.code] || partnerMap['A'];
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#616161';
+  ctx.font = '600 20px "Noto Sans TC", sans-serif';
+  ctx.fillText('最合拍的夥伴', W / 2, y);
+  y += 32;
+  ctx.font = '600 20px "Noto Sans TC", sans-serif';
+  const gap2 = 16;
+  const pillH2 = 40;
+  const pad2 = 20;
+  const widths2 = buddies.map(b => ctx.measureText(b.name).width + 28 + pad2 * 2);
+  const totalW2 = widths2.reduce((a, b) => a + b, 0) + gap2;
+  let sx = W / 2 - totalW2 / 2;
+  buddies.forEach((b, i) => {
+    const pw = widths2[i];
+    const px = sx;
+    const py = y;
+    ctx.fillStyle = '#F5F5F5';
+    ctx.beginPath();
+    ctx.moveTo(px + 20, py);
+    ctx.lineTo(px + pw - 20, py);
+    ctx.quadraticCurveTo(px + pw, py, px + pw, py + 20);
+    ctx.lineTo(px + pw, py + pillH2 - 20);
+    ctx.quadraticCurveTo(px + pw, py + pillH2, px + pw - 20, py + pillH2);
+    ctx.lineTo(px + 20, py + pillH2);
+    ctx.quadraticCurveTo(px, py + pillH2, px, py + pillH2 - 20);
+    ctx.lineTo(px, py + 20);
+    ctx.quadraticCurveTo(px, py, px + 20, py);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = b.color;
+    ctx.beginPath();
+    ctx.arc(px + 18, py + pillH2 / 2, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#424242';
+    ctx.textAlign = 'left';
+    ctx.fillText(b.name, px + 32, py + 26);
+    sx += pw + gap2;
+  });
+  ctx.textAlign = 'center';
+  y += pillH2 + 24;
 
   // 頁尾一句話 A
   ctx.fillStyle = 'rgba(158,158,158,0.95)';
