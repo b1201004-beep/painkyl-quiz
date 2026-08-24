@@ -181,7 +181,7 @@ function bindShare(result) {
 }
 
 function setupReveal() {
-  const targets = document.querySelectorAll('.result-section, .edu-section, .result-actions');
+  const targets = document.querySelectorAll('.result-section, .edu-section, .share-image-section, .result-actions');
   if (!('IntersectionObserver' in window)) {
     targets.forEach(el => el.classList.add('revealed'));
     return;
@@ -254,6 +254,222 @@ function confetti(mainColor) {
   requestAnimationFrame(frame);
 }
 
+function svgToImage(svgText) {
+  return new Promise((resolve, reject) => {
+    const blob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(img);
+    };
+    img.onerror = e => {
+      URL.revokeObjectURL(url);
+      reject(e);
+    };
+    img.src = url;
+  });
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  const chars = text.split('');
+  let line = '';
+  let curY = y;
+  for (let i = 0; i < chars.length; i++) {
+    const test = line + chars[i];
+    if (ctx.measureText(test).width > maxWidth && line) {
+      ctx.fillText(line, x, curY);
+      line = chars[i];
+      curY += lineHeight;
+    } else {
+      line = test;
+    }
+  }
+  if (line) ctx.fillText(line, x, curY);
+  return curY + lineHeight;
+}
+
+async function generateShareImage(result) {
+  const canvas = document.getElementById('shareCanvas');
+  const W = 1080;
+  const H = 1350;
+  const dpr = 2;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  await document.fonts.ready;
+
+  // background
+  ctx.fillStyle = '#F8FAF9';
+  ctx.fillRect(0, 0, W, H);
+  const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+  bgGrad.addColorStop(0, '#E8F5EE');
+  bgGrad.addColorStop(0.5, '#F8FAF9');
+  bgGrad.addColorStop(1, '#FFFFFF');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+  // blobs
+  ctx.globalAlpha = 0.35;
+  const blob1 = ctx.createRadialGradient(120, 120, 0, 120, 120, 320);
+  blob1.addColorStop(0, 'rgba(64,145,108,0.45)');
+  blob1.addColorStop(1, 'rgba(64,145,108,0)');
+  ctx.fillStyle = blob1;
+  ctx.beginPath();
+  ctx.arc(120, 120, 320, 0, Math.PI * 2);
+  ctx.fill();
+  const blob2 = ctx.createRadialGradient(960, 1180, 0, 960, 1180, 280);
+  blob2.addColorStop(0, 'rgba(212,168,67,0.32)');
+  blob2.addColorStop(1, 'rgba(212,168,67,0)');
+  ctx.fillStyle = blob2;
+  ctx.beginPath();
+  ctx.arc(960, 1180, 280, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+
+  // card
+  const cardX = 56;
+  const cardY = 56;
+  const cardW = W - 112;
+  const cardH = H - 112;
+  ctx.fillStyle = '#FFFFFF';
+  ctx.shadowColor = 'rgba(0,0,0,0.08)';
+  ctx.shadowBlur = 32;
+  ctx.shadowOffsetY = 12;
+  // rounded rect
+  const r = 32;
+  ctx.beginPath();
+  ctx.moveTo(cardX + r, cardY);
+  ctx.lineTo(cardX + cardW - r, cardY);
+  ctx.quadraticCurveTo(cardX + cardW, cardY, cardX + cardW, cardY + r);
+  ctx.lineTo(cardX + cardW, cardY + cardH - r);
+  ctx.quadraticCurveTo(cardX + cardW, cardY + cardH, cardX + cardW - r, cardY + cardH);
+  ctx.lineTo(cardX + r, cardY + cardH);
+  ctx.quadraticCurveTo(cardX, cardY + cardH, cardX, cardY + cardH - r);
+  ctx.lineTo(cardX, cardY + r);
+  ctx.quadraticCurveTo(cardX, cardY, cardX + r, cardY);
+  ctx.closePath();
+  ctx.fill();
+  ctx.shadowColor = 'transparent';
+  // top accent
+  ctx.fillStyle = result.color;
+  ctx.beginPath();
+  ctx.moveTo(cardX + r, cardY);
+  ctx.lineTo(cardX + cardW - r, cardY);
+  ctx.quadraticCurveTo(cardX + cardW, cardY, cardX + cardW, cardY + 10);
+  ctx.lineTo(cardX + cardW, cardY + 18);
+  ctx.lineTo(cardX, cardY + 18);
+  ctx.lineTo(cardX, cardY + 10);
+  ctx.quadraticCurveTo(cardX, cardY, cardX + r, cardY);
+  ctx.closePath();
+  ctx.fill();
+
+  // character
+  try {
+    const svgText = characters[result.character];
+    const img = await svgToImage(svgText);
+    const drawW = 420;
+    const drawH = 546;
+    const cx = W / 2 - drawW / 2;
+    const cy = 112;
+    ctx.drawImage(img, cx, cy, drawW, drawH);
+  } catch {}
+
+  // title
+  let y = 700;
+  ctx.textAlign = 'center';
+  ctx.fillStyle = result.color;
+  ctx.font = '900 64px "Noto Sans TC", sans-serif';
+  ctx.fillText(result.name, W / 2, y);
+  y += 56;
+  ctx.fillStyle = '#616161';
+  ctx.font = '500 26px "Noto Sans TC", sans-serif';
+  ctx.fillText(`${result.enName}`, W / 2, y);
+  y += 38;
+  ctx.fillStyle = '#757575';
+  ctx.font = '400 24px "Noto Sans TC", sans-serif';
+  const tagY = wrapText(ctx, result.tagline, W / 2 - 380, y, 760, 34);
+  y = tagY + 18;
+
+  // traits pills
+  const traits = result.traits;
+  ctx.font = '600 22px "Noto Sans TC", sans-serif';
+  const gap = 14;
+  const pillH = 44;
+  const pillPad = 22;
+  let totalW = 0;
+  const widths = traits.map(t => ctx.measureText(t).width + pillPad * 2);
+  totalW = widths.reduce((a, b) => a + b, 0) + gap * (traits.length - 1);
+  let startX = W / 2 - totalW / 2;
+  traits.forEach((t, i) => {
+    const pw = widths[i];
+    const px = startX;
+    const py = y;
+    ctx.fillStyle = '#E8F5EE';
+    ctx.beginPath();
+    ctx.moveTo(px + 22, py);
+    ctx.lineTo(px + pw - 22, py);
+    ctx.quadraticCurveTo(px + pw, py, px + pw, py + 22);
+    ctx.lineTo(px + pw, py + pillH - 22);
+    ctx.quadraticCurveTo(px + pw, py + pillH, px + pw - 22, py + pillH);
+    ctx.lineTo(px + 22, py + pillH);
+    ctx.quadraticCurveTo(px, py + pillH, px, py + pillH - 22);
+    ctx.lineTo(px, py + 22);
+    ctx.quadraticCurveTo(px, py, px + 22, py);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = result.color;
+    ctx.textAlign = 'center';
+    ctx.fillText(t, px + pw / 2, py + 29);
+    startX += pw + gap;
+  });
+  ctx.textAlign = 'center';
+  y += pillH + 48;
+
+  // footer
+  ctx.fillStyle = '#9E9E9E';
+  ctx.font = '400 20px "Noto Sans TC", sans-serif';
+  ctx.fillText('台灣東洋 · Painkyl 專業醫護測驗', W / 2, H - 112);
+  ctx.fillStyle = '#BDBDBD';
+  ctx.font = '400 18px "Noto Sans TC", sans-serif';
+  ctx.fillText('https://b1201004-beep.github.io/painkyl-quiz/', W / 2, H - 82);
+
+  // to image
+  const url = canvas.toDataURL('image/png');
+  const imgEl = document.getElementById('shareImage');
+  const wrap = document.getElementById('shareImageWrap');
+  const dl = document.getElementById('downloadImageBtn');
+  imgEl.src = url;
+  dl.href = url;
+  dl.download = `painkyl-${result.code}.png`;
+  wrap.hidden = false;
+  dl.hidden = false;
+  return url;
+}
+
+function setupShareImage(result) {
+  const btn = document.getElementById('generateImageBtn');
+  const wrap = document.getElementById('shareImageWrap');
+  if (!btn) return;
+  btn.addEventListener('click', async () => {
+    const span = btn.querySelector('span');
+    const original = span ? span.textContent : btn.textContent;
+    if (span) span.textContent = '產生中...';
+    else btn.textContent = '產生中...';
+    btn.disabled = true;
+    try {
+      await generateShareImage(result);
+      if (span) span.textContent = '已產生 ✓ 長按圖片儲存';
+      else btn.textContent = '已產生 ✓ 長按圖片儲存';
+      wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (e) {
+      if (span) span.textContent = original;
+      else btn.textContent = original;
+      btn.disabled = false;
+    }
+  });
+}
+
 const answers = loadAnswers();
 if (answers.filter(Boolean).length === 0) {
   softNavigate('index.html');
@@ -261,6 +477,7 @@ if (answers.filter(Boolean).length === 0) {
   const result = renderResult(calculateResult(answers));
   renderEducation();
   bindShare(result);
+  setupShareImage(result);
   setupReveal();
   setTimeout(() => {
     sfxSuccess();
