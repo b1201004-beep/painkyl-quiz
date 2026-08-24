@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第 3 題 | Painkyl 醫護人格測驗</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body data-page="quiz" data-question="3">
+  <main class="page quiz-page">
+    <div class="page-container">
+      <header class="page-header">
+        <div class="progress-indicator">
+          <div class="progress-steps">
+            <span class="step done">1</span>
+            <span class="step done">2</span>
+            <span class="step active">3</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div>
+        </div>
+      </header>
+
+      <div class="question-content">
+        <div class="question-card">
+          <div class="question-header">
+            <span class="question-number">第 3 題 / 共 3 題</span>
+            <h1 class="question-title"></h1>
+          </div>
+          <p class="question-scenario"></p>
+          <div class="options-container" role="radiogroup" aria-label="選項"></div>
+        </div>
+      </div>
+
+      <footer class="quiz-footer">
+        <a class="btn btn-secondary" id="prevBtn" href="quiz2.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>上一題</span>
+        </a>
+        <button class="btn btn-primary" id="nextBtn" type="button" disabled>
+          <span>查看結果</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </footer>
+    </div>
+  </main>
+  <script type="module" src="js/quiz.js"></script>
+</body>
+</html>
