@@ -325,6 +325,7 @@ async function generateShareImage(result) {
   const ctx = canvas.getContext('2d');
   ctx.scale(dpr, dpr);
   await document.fonts.ready;
+  // 填滿 9:16，內容垂直均分，避免底部留白
 
   // background
   ctx.fillStyle = '#F8FAF9';
@@ -390,53 +391,51 @@ async function generateShareImage(result) {
   ctx.closePath();
   ctx.fill();
 
-  // 測驗標題（置於角色頭上白色區域正中央）
+  // 測驗標題（置頂，填滿上方）
   ctx.textAlign = 'center';
   ctx.fillStyle = result.color;
-  ctx.font = '900 72px "Noto Sans TC", sans-serif';
-  ctx.fillText('癌症疼痛管理人格測驗', W / 2, 118);
+  ctx.font = '900 56px "Noto Sans TC", sans-serif';
+  ctx.fillText('癌症疼痛管理人格測驗', W / 2, 108);
 
-  // character（依標題位置自動計算，避免與文字重疊）
+  // character（放大，填滿中段）
   let charDrawH = 0;
   let charBottom = 0;
   try {
     const svgText = characters[result.character];
     const img = await svgToImage(svgText);
-    const drawW = 360;
-    const drawH = 468;
+    const drawW = 520;
+    const drawH = 676;
     charDrawH = drawH;
     const cx = W / 2 - drawW / 2;
-    const cy = 190;
+    const cy = 148;
     charBottom = cy + drawH;
     ctx.drawImage(img, cx, cy, drawW, drawH);
   } catch {
-    charBottom = 658;
+    charBottom = 824;
   }
 
-  // title（角色名，自動避開圖片）
-  let y = Math.max(760, charBottom + 48);
+  // title（角色名）— 放大填滿
+  let y = charBottom + 36;
   ctx.textAlign = 'center';
   ctx.fillStyle = result.color;
-  ctx.font = '900 52px "Noto Sans TC", sans-serif';
+  ctx.font = '900 62px "Noto Sans TC", sans-serif';
   ctx.fillText(result.name, W / 2, y);
-  y += 56;
+  y += 68;
   ctx.fillStyle = '#616161';
-  ctx.font = '500 26px "Noto Sans TC", sans-serif';
+  ctx.font = '600 26px "Noto Sans TC", sans-serif';
   ctx.fillText(`${result.enName}`, W / 2, y);
-  y += 38;
-  ctx.textAlign = 'center';
+  y += 42;
   ctx.fillStyle = '#757575';
-  ctx.font = '400 24px "Noto Sans TC", sans-serif';
-  const tagY = wrapTextCentered(ctx, result.tagline, W / 2, y, 760, 34);
-  y = tagY + 10;
-  ctx.textAlign = 'center';
+  ctx.font = '500 24px "Noto Sans TC", sans-serif';
+  const tagY = wrapTextCentered(ctx, result.tagline, W / 2, y, 780, 36);
+  y = tagY + 18;
 
-  // traits pills
+  // traits pills — 放大填滿
   const traits = result.traits;
-  ctx.font = '600 22px "Noto Sans TC", sans-serif';
-  const gap = 14;
-  const pillH = 44;
-  const pillPad = 22;
+  ctx.font = '700 24px "Noto Sans TC", sans-serif';
+  const gap = 18;
+  const pillH = 52;
+  const pillPad = 26;
   let totalW = 0;
   const widths = traits.map(t => ctx.measureText(t).width + pillPad * 2);
   totalW = widths.reduce((a, b) => a + b, 0) + gap * (traits.length - 1);
@@ -460,18 +459,18 @@ async function generateShareImage(result) {
     ctx.fill();
     ctx.fillStyle = result.color;
     ctx.textAlign = 'center';
-    ctx.fillText(t, px + pw / 2, py + 29);
+    ctx.fillText(t, px + pw / 2, py + 33);
     startX += pw + gap;
   });
   ctx.textAlign = 'center';
-  y += pillH + 14;
+  y += pillH + 28;
 
-  // 小知識卡 B（上移）
+  // 小知識卡 — 放大填滿
   const knowY = y;
-  const knowH = 72;
-  const knowX = cardX + 48;
-  const knowW = cardW - 96;
-  ctx.fillStyle = 'rgba(232,245,238,0.92)';
+  const knowH = 88;
+  const knowX = cardX + 40;
+  const knowW = cardW - 80;
+  ctx.fillStyle = 'rgba(232,245,238,0.96)';
   ctx.beginPath();
   ctx.moveTo(knowX + 16, knowY);
   ctx.lineTo(knowX + knowW - 16, knowY);
