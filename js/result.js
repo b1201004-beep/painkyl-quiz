@@ -318,7 +318,7 @@ function wrapTextCentered(ctx, text, centerX, y, maxWidth, lineHeight) {
 async function generateShareImage(result) {
   const canvas = document.getElementById('shareCanvas');
   const W = 1080;
-  const H = 1350;
+  const H = 1920;
   const dpr = 2;
   canvas.width = W * dpr;
   canvas.height = H * dpr;
@@ -390,25 +390,31 @@ async function generateShareImage(result) {
   ctx.closePath();
   ctx.fill();
 
-  // 測驗標題（下移，避免貼頂，顏色跟隨結果）
+  // 測驗標題（下移，避免貼頂，顏色跟隨結果，比角色名大）
   ctx.textAlign = 'center';
   ctx.fillStyle = result.color;
-  ctx.font = '900 68px "Noto Sans TC", sans-serif';
-  ctx.fillText('癌症疼痛管理人格測驗', W / 2, 158);
+  ctx.font = '900 72px "Noto Sans TC", sans-serif';
+  ctx.fillText('癌症疼痛管理人格測驗', W / 2, 164);
 
-  // character（同步下移，避免與標題重疊）
+  // character（依標題位置自動計算，避免與文字重疊）
+  let charDrawH = 0;
+  let charBottom = 0;
   try {
     const svgText = characters[result.character];
     const img = await svgToImage(svgText);
-    const drawW = 420;
-    const drawH = 546;
+    const drawW = 360;
+    const drawH = 468;
+    charDrawH = drawH;
     const cx = W / 2 - drawW / 2;
-    const cy = 168;
+    const cy = 190;
+    charBottom = cy + drawH;
     ctx.drawImage(img, cx, cy, drawW, drawH);
-  } catch {}
+  } catch {
+    charBottom = 658;
+  }
 
-  // title（角色名，刻意比測驗標題小）
-  let y = 700;
+  // title（角色名，自動避開圖片）
+  let y = Math.max(760, charBottom + 48);
   ctx.textAlign = 'center';
   ctx.fillStyle = result.color;
   ctx.font = '900 52px "Noto Sans TC", sans-serif';
@@ -485,9 +491,9 @@ async function generateShareImage(result) {
   ctx.fillStyle = '#616161';
   ctx.font = '400 18px "Noto Sans TC", sans-serif';
   ctx.fillText('66% 晚期癌症患者持續受疼痛困擾，早期評估很重要', W / 2, knowY + 52);
-  y = knowY + knowH + 36;
+  y = knowY + knowH + 40;
 
-  // 最合拍的夥伴（單一，含角色圖片，顏色跟隨夥伴）— 下移 + 放大
+  // 最合拍的夥伴 — 獨立大區塊
   const partnerMap = {
     A: { name: '溫暖同行者', enName: 'The Empathetic Companion', color: '#B0578D', character: 'companion' },
     B: { name: '精準評估家', enName: 'The Precision Assessor', color: '#2D6A4F', character: 'assessor' },
@@ -495,13 +501,34 @@ async function generateShareImage(result) {
     D: { name: '果斷行動派', enName: 'The Decisive Advocate', color: '#C75B39', character: 'advocate' },
   };
   const buddy = partnerMap[result.code] || partnerMap['A'];
+  // 區塊背景（獨立區域）
+  const sectionH = 196;
+  const sectionY = y;
+  const sectionX = cardX + 24;
+  const sectionW = cardW - 48;
+  ctx.fillStyle = '#F0F7F3';
+  ctx.strokeStyle = '#D5E8DD';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(sectionX + 20, sectionY);
+  ctx.lineTo(sectionX + sectionW - 20, sectionY);
+  ctx.quadraticCurveTo(sectionX + sectionW, sectionY, sectionX + sectionW, sectionY + 20);
+  ctx.lineTo(sectionX + sectionW, sectionY + sectionH - 20);
+  ctx.quadraticCurveTo(sectionX + sectionW, sectionY + sectionH, sectionX + sectionW - 20, sectionY + sectionH);
+  ctx.lineTo(sectionX + 20, sectionY + sectionH);
+  ctx.quadraticCurveTo(sectionX, sectionY + sectionH, sectionX, sectionY + sectionH - 20);
+  ctx.lineTo(sectionX, sectionY + 20);
+  ctx.quadraticCurveTo(sectionX, sectionY, sectionX + 20, sectionY);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#616161';
-  ctx.font = '600 22px "Noto Sans TC", sans-serif';
-  ctx.fillText('最合拍的夥伴', W / 2, y);
-  y += 36;
-  const pillH2 = 80;
-  const avatarSize = 64;
+  ctx.fillStyle = '#2D6A4F';
+  ctx.font = '700 22px "Noto Sans TC", sans-serif';
+  ctx.fillText('最合拍的夥伴', W / 2, y + 36);
+  y += 54;
+  const pillH2 = 96;
+  const avatarSize = 80;
   const pad2 = 20;
   // 計算寬度
   ctx.font = '600 20px "Noto Sans TC", sans-serif';
@@ -560,7 +587,7 @@ async function generateShareImage(result) {
   ctx.font = '400 13px "Noto Sans TC", sans-serif';
   ctx.fillText(buddy.enName, px + 16 + avatarSize + 12, py + 44);
   ctx.textAlign = 'center';
-  y += pillH2 + 28;
+  y = sectionY + sectionH + 28;
 
   // 頁尾一句話 A
   ctx.fillStyle = 'rgba(158,158,158,0.95)';
