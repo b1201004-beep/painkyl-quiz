@@ -486,10 +486,10 @@ async function generateShareImage(result) {
   ctx.fillStyle = '#2D6A4F';
   ctx.font = '800 24px "Noto Sans TC", sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('小知識', W / 2, knowY + 32);
+  ctx.fillText('小知識', W / 2, knowY + 46);
   ctx.fillStyle = '#616161';
   ctx.font = '500 22px "Noto Sans TC", sans-serif';
-  ctx.fillText('66% 晚期癌症患者持續受疼痛困擾，早期評估很重要', W / 2, knowY + 62);
+  ctx.fillText('66% 晚期癌症患者持續受疼痛困擾，早期評估很重要', W / 2, knowY + 78);
   y = knowY + knowH + 40;
 
   // 最合拍的夥伴 — 獨立區塊，有底色，置中放大
@@ -571,7 +571,8 @@ async function generateShareImage(result) {
   try {
     const svgText2 = characters[buddy.character];
     const img2 = await svgToImage(svgText2);
-    ctx.drawImage(img2, 0, 30, 200, 200, gx, gy - avatarSize / 2, avatarSize, avatarSize);
+    const dh = avatarSize * 1.3;
+    ctx.drawImage(img2, gx, gy - dh / 2, avatarSize, dh);
   } catch {}
   ctx.restore();
   ctx.strokeStyle = buddy.color;
@@ -589,10 +590,10 @@ async function generateShareImage(result) {
   ctx.fillText(buddy.enName, gx + avatarSize + 30, gy + 30);
 
   // 頁尾一句話 A
-  ctx.fillStyle = 'rgba(158,158,158,0.95)';
-  ctx.font = '400 16px "Noto Sans TC", sans-serif';
+  ctx.fillStyle = '#757575';
+  ctx.font = '700 22px "Noto Sans TC", sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('疼痛控制是治療的起點 — 認識 Painkyl', W / 2, H - 138);
+  ctx.fillText('疼痛控制是治療的起點 — 認識 Painkyl', W / 2, H - 146);
 
   // footer
   ctx.fillStyle = '#9E9E9E';
