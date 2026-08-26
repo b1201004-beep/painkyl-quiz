@@ -490,6 +490,10 @@ async function generateShareImage(result) {
   ctx.fillStyle = '#616161';
   ctx.font = '500 22px "Noto Sans TC", sans-serif';
   ctx.fillText('66% 晚期癌症患者持續受疼痛困擾，早期評估很重要', W / 2, knowY + 78);
+  ctx.fillStyle = '#9E9E9E';
+  ctx.font = '500 14px "Noto Sans TC", sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('①③', knowX + knowW - 8, knowY + 18);
   y = knowY + knowH + 40;
 
   // 最合拍的夥伴 — 獨立區塊，有底色，置中放大
