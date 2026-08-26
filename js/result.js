@@ -600,23 +600,10 @@ async function generateShareImage(result) {
   ctx.fillText('疼痛控制是治療的起點 — 認識 Painkyl', W / 2, H - 146);
 
   // footer
-  // logo（取代原本文字）
-  try {
-    const logoImg = new Image();
-    await new Promise((resolve, reject) => {
-      logoImg.onload = resolve;
-      logoImg.onerror = reject;
-      logoImg.src = 'tty-logo.svg';
-    });
-    const logoH = 40;
-    const logoW = logoH * (124.88 / 57.37);
-    ctx.drawImage(logoImg, W / 2 - logoW / 2, H - 122, logoW, logoH);
-  } catch {
-    ctx.fillStyle = '#9E9E9E';
-    ctx.font = '400 20px "Noto Sans TC", sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('台灣東洋 · Painkyl 專業醫護測驗', W / 2, H - 112);
-  }
+  ctx.fillStyle = '#9E9E9E';
+  ctx.font = '400 20px "Noto Sans TC", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('台灣東洋 · Painkyl 專業醫護測驗', W / 2, H - 112);
   ctx.fillStyle = '#BDBDBD';
   ctx.font = '400 18px "Noto Sans TC", sans-serif';
   ctx.fillText('https://b1201004-beep.github.io/painkyl-quiz/', W / 2, H - 82);
