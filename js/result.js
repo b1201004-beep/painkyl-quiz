@@ -36,7 +36,7 @@ function calculateResult(answers) {
 }
 
 function renderResult(result) {
-  document.title = `${result.name} | Painkyl 醫護人格測驗`;
+  document.title = `${result.name} | Painkyl 癌症疼痛管理者人格測驗`;
   const charEl = document.getElementById('resultCharacter');
   charEl.innerHTML = characters[result.character];
 
@@ -395,7 +395,7 @@ async function generateShareImage(result) {
   ctx.textAlign = 'center';
   ctx.fillStyle = result.color;
   ctx.font = '900 56px "Noto Sans TC", sans-serif';
-  ctx.fillText('癌症疼痛管理人格測驗', W / 2, 148);
+  ctx.fillText('癌症疼痛管理者人格測驗', W / 2, 148);
 
   // character（垂直置中段，放大填滿 9:16）
   let charDrawH = 0;
