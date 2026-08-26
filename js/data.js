@@ -158,7 +158,7 @@ export const painkylEducation = {
     {
       icon: 'clock',
       title: '全程疼痛控制',
-      desc: '從持續性的背景疼痛，到突然襲來的突發性疼痛（breakthrough pain），都需要完整的處置策略與備案。'
+      desc: '突發性疼痛來得快、去得快，即使背景痛已控制仍可能突然發作。備有速效救援藥物，才能在疼痛襲來時即時應對。'
     },
     {
       icon: 'heart',
