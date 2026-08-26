@@ -157,7 +157,7 @@ export const painkylEducation = {
     },
     {
       icon: 'clock',
-      title: '全程疼痛控制',
+      title: '突發性疼痛救援',
       desc: '突發性疼痛來得快、去得快，即使背景痛已控制仍可能突然發作。備有速效救援藥物，才能在疼痛襲來時即時應對。'
     },
     {
