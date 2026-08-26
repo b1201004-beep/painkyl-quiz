@@ -508,10 +508,10 @@ body {
 }
 
 .footer-logo-img {
-  height: 44px;
+  height: 22px;
   width: auto;
   object-fit: contain;
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
 .footer-disclaimer {
