@@ -54,7 +54,7 @@ function saveAnswer(type) {
 }
 
 function render() {
-  document.title = `第 ${idx + 1} 題 | Painkyl 醫護人格測驗`;
+  document.title = `第 ${idx + 1} 題 | Painkyl 癌症疼痛管理者人格測驗`;
   els.title.textContent = q.title;
   els.scenario.textContent = q.scenario;
   if (q.hint && !els.scenario.nextElementSibling?.classList.contains('question-hint')) {
